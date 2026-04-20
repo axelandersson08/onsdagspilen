@@ -1,0 +1,684 @@
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onsdags-Pilen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8102E;--red-dark:#A00C24;--red-light:#F9E8EB;--red-mid:#E8A0AB;
+  --bg:#F7F5F2;--white:#FFFFFF;--ink:#1A1A1A;--muted:#7A7570;
+  --border:#E2DDD8;--border-strong:#C8C3BD;--surface2:#F2EFEB;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh}
+ 
+/* HEADER */
+.header{background:var(--red);padding:0 32px;display:flex;align-items:center;gap:16px;height:68px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(200,16,46,0.18)}
+.logo-wrap{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.logo-icon{width:34px;height:34px;flex-shrink:0}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:#fff}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:.5px}
+.nav{display:flex;gap:4px;margin-left:auto}
+.nav-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:7px 14px;border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(255,255,255,0.22);color:#fff}
+.nav-btn.active{background:#fff;color:var(--red);border-color:transparent}
+ 
+/* LAYOUT */
+.main{max-width:980px;margin:0 auto;padding:32px 20px 80px}
+.section{display:none}
+.section.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.page-header{margin-bottom:28px}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--red);letter-spacing:1px;line-height:1}
+.page-sub{font-size:13px;color:var(--muted);margin-top:4px}
+ 
+/* TABLES */
+.table-wrap{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--red)}
+thead th{padding:12px 16px;font-size:11px;font-weight:500;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:.1em;text-align:left}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surface2)}
+td{padding:11px 16px;font-size:14px}
+.rank-num{font-family:'Bebas Neue',sans-serif;font-size:20px;width:36px;color:var(--muted)}
+.rank-1{color:var(--red)}.rank-2{color:#888}.rank-3{color:#B07030}
+.pts{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--red)}
+.stat{color:var(--muted);font-size:13px}
+ 
+.player-link{font-weight:500;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--ink);background:none;border:none;padding:0;text-align:left;font-family:inherit}
+.player-link:hover .pl-name{color:var(--red);text-decoration:underline}
+.pl-avatar-sm{width:30px;height:30px;border-radius:50%;background:var(--red-light);flex-shrink:0;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--red);overflow:hidden}
+.pl-avatar-sm img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+ 
+/* PODIUM */
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.podium-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 16px;text-align:center;position:relative;overflow:hidden;cursor:pointer;transition:box-shadow .15s}
+.podium-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.09)}
+.podium-card.p1{border-color:var(--red);border-top:3px solid var(--red)}
+.podium-card.p2{border-top:3px solid #999}.podium-card.p3{border-top:3px solid #B07030}
+.podium-pos{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--border);position:absolute;top:8px;right:12px;line-height:1}
+.podium-card.p1 .podium-pos{color:var(--red-light)}
+.podium-avatar{width:56px;height:56px;border-radius:50%;background:var(--red-light);margin:0 auto 8px;border:2px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red)}
+.podium-avatar img{width:100%;height:100%;object-fit:cover}
+.podium-name{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ink)}
+.podium-pts{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--red);line-height:1}
+.podium-label{font-size:11px;color:var(--muted);margin-top:2px}
+ 
+/* MONTHLY TABS */
+.monthly-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.mtab{background:var(--white);border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:7px 18px;border-radius:20px;cursor:pointer;transition:all .15s}
+.mtab:hover{border-color:var(--red);color:var(--red)}
+.mtab.active{background:var(--red);color:#fff;border-color:var(--red)}
+ 
+/* SESSION CARDS */
+.sessions-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.add-btn{background:var(--red);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;padding:10px 22px;border-radius:8px;cursor:pointer;transition:background .15s}
+.add-btn:hover{background:var(--red-dark)}
+.session-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.session-card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.session-card:hover{border-color:var(--red-mid);box-shadow:0 2px 12px rgba(200,16,46,0.08)}
+.session-card.open{border-color:var(--red)}
+.sc-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border);background:var(--surface2);cursor:pointer}
+.sc-date{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--red)}
+.sc-winner{font-size:13px;font-weight:500;color:var(--ink)}
+.sc-n{font-size:11px;color:var(--muted);margin-top:2px}
+.sc-body{padding:10px 16px;display:none}
+.session-card.open .sc-body{display:block}
+.sc-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.sc-row:last-child{border-bottom:none}
+.sc-pos{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);width:18px;flex-shrink:0}
+.sc-pos.first{color:var(--red)}
+.sc-pts-sm{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--red)}
+.sc-record{font-size:12px;color:var(--muted);margin-left:auto}
+.absent-note{font-size:11px;color:var(--muted);margin-top:8px;font-style:italic}
+.delete-btn{background:none;border:none;color:var(--border-strong);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:4px;transition:color .15s}
+.delete-btn:hover{color:var(--red)}
+ 
+/* PLAYERS GRID */
+.players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.player-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.player-card:hover{border-color:var(--red-mid);box-shadow:0 4px 20px rgba(200,16,46,0.1)}
+.pc-avatar{width:72px;height:72px;border-radius:50%;background:var(--red-light);margin:0 auto 12px;border:2px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--red)}
+.pc-avatar img{width:100%;height:100%;object-fit:cover}
+.pc-name{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ink)}
+.pc-nick{font-size:12px;color:var(--muted);font-style:italic;margin-top:2px;min-height:16px}
+.pc-rank{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red);margin-top:8px}
+.pc-rank-label{font-size:11px;color:var(--muted)}
+ 
+/* PROFILE */
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;margin-bottom:24px;background:none;border:none;padding:0;font-family:inherit}
+.back-btn:hover{color:var(--red)}
+.profile-layout{display:grid;grid-template-columns:270px 1fr;gap:24px;align-items:start}
+.profile-sidebar{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.profile-avatar-wrap{background:var(--red-light);padding:32px 0 20px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.profile-avatar{width:96px;height:96px;border-radius:50%;background:var(--white);border:3px solid var(--red);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--red);cursor:pointer;position:relative}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-avatar-overlay{position:absolute;inset:0;background:rgba(200,16,46,0.65);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:500;opacity:0;transition:opacity .2s;cursor:pointer;text-align:center;line-height:1.3}
+.profile-avatar:hover .profile-avatar-overlay{opacity:1}
+.profile-fullname{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ink);text-align:center}
+.profile-nick{font-size:13px;color:var(--muted);font-style:italic;min-height:18px}
+.profile-info-list{padding:14px 16px}
+.profile-info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.profile-info-row:last-child{border-bottom:none}
+.pir-label{color:var(--muted)}
+.pir-val{font-weight:500;color:var(--ink)}
+.edit-profile-btn{display:block;width:calc(100% - 32px);margin:4px 16px 16px;background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:8px;border-radius:8px;cursor:pointer;transition:all .15s;text-align:center}
+.edit-profile-btn:hover{border-color:var(--red);color:var(--red)}
+ 
+.profile-main{display:flex;flex-direction:column;gap:20px}
+.stat-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat-card-num{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--red);line-height:1}
+.stat-card-label{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.3}
+ 
+.profile-section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink);margin-bottom:12px}
+.player-history{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.ph-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px}
+.ph-row:last-child{border-bottom:none}
+.ph-date{color:var(--muted);min-width:110px}
+.ph-pos{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);min-width:28px}
+.ph-pos.p1{color:var(--red)}
+.ph-rec{color:var(--muted);font-size:12px;margin-left:auto}
+.ph-pts{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red);min-width:40px;text-align:right}
+ 
+/* MODALS */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:var(--white);border-radius:14px;padding:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--red);margin-bottom:20px}
+.form-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:500;margin-bottom:6px;display:block}
+.form-row{margin-bottom:14px}
+input[type="date"],input[type="text"],input[type="number"],select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14px;padding:9px 12px;border-radius:8px;outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:var(--red)}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:500;margin:6px 0 8px}
+.drag-hint{font-size:11px;color:var(--muted);margin-bottom:8px}
+.drag-list{display:flex;flex-direction:column;gap:6px}
+.drag-item{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;cursor:grab;user-select:none;transition:border-color .15s}
+.drag-item:active{cursor:grabbing}
+.drag-item.dragging{opacity:.35}
+.drag-item.drag-over{border-color:var(--red);background:var(--red-light)}
+.drag-item.absent{opacity:.45}
+.drag-item.absent .drag-name{text-decoration:line-through}
+input[type="checkbox"]{accent-color:var(--red);width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.drag-name{font-size:14px;font-weight:500;min-width:60px}
+.drag-handle{color:var(--border-strong);font-size:16px;margin-left:auto}
+.record-inputs{display:flex;align-items:center;gap:4px}
+.record-inputs input[type="number"]{width:38px;padding:4px 5px;text-align:center;font-size:13px;-moz-appearance:textfield}
+.record-inputs input::-webkit-inner-spin-button,.record-inputs input::-webkit-outer-spin-button{-webkit-appearance:none}
+.record-sep{font-size:12px;color:var(--muted)}
+.form-actions{display:flex;gap:10px;margin-top:20px}
+.btn-cancel{background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;padding:9px 20px;border-radius:8px;cursor:pointer;transition:all .15s}
+.btn-cancel:hover{border-color:var(--muted);color:var(--ink)}
+.btn-save{background:var(--red);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;padding:9px 28px;border-radius:8px;cursor:pointer;flex:1;transition:background .15s}
+.btn-save:hover{background:var(--red-dark)}
+ 
+/* EDIT PROFILE MODAL */
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.edit-grid .full{grid-column:1/-1}
+.photo-upload-area{border:2px dashed var(--border);border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:border-color .15s}
+.photo-upload-area:hover{border-color:var(--red)}
+.photo-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:block}
+.photo-upload-label{font-size:13px;color:var(--muted)}
+#photo-file-input{display:none}
+ 
+.empty{text-align:center;padding:48px 20px;color:var(--muted);font-size:14px}
+ 
+@media(max-width:700px){
+  .header{padding:0 16px;height:auto;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}
+  .nav{width:100%;justify-content:center}
+  .podium{grid-template-columns:1fr}
+  .profile-layout{grid-template-columns:1fr}
+  .edit-grid{grid-template-columns:1fr}
+  .edit-grid .full{grid-column:1}
+}
+</style>
+</head>
+<body>
+ 
+<header class="header">
+  <div class="logo-wrap">
+    <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+      <circle cx="18" cy="18" r="16" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+      <circle cx="18" cy="18" r="10" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
+      <circle cx="18" cy="18" r="4" fill="white"/>
+      <line x1="28" y1="8" x2="36" y2="4" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="8" x2="18" y2="18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <polygon points="34,2 38,6 36,4" fill="white"/>
+    </svg>
+    <div>
+      <div class="logo-text">Onsdags-Pilen</div>
+      <div class="logo-sub">Biljardpalatset · Kungsholmen</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showSection('marathon',this)">Maratontabell</button>
+    <button class="nav-btn" onclick="showSection('monthly',this)">Månadsvis</button>
+    <button class="nav-btn" onclick="showSection('sessions',this)">Onsdagar</button>
+    <button class="nav-btn" onclick="showSection('players',this)">Spelare</button>
+  </nav>
+</header>
+ 
+<main class="main">
+ 
+  <!-- MARATHON -->
+  <section class="section active" id="sec-marathon">
+    <div class="page-header">
+      <div class="page-title">Maratontabell</div>
+      <div class="page-sub" id="marathon-sub">Alla poäng sedan starten · 18 april 2025</div>
+    </div>
+    <div class="podium" id="podium"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Spelare</th><th>Antal onsdagar</th><th>Poäng</th><th>Snittpoäng</th></tr></thead>
+        <tbody id="tb-marathon"></tbody>
+      </table>
+    </div>
+  </section>
+ 
+  <!-- MONTHLY -->
+  <section class="section" id="sec-monthly">
+    <div class="page-header">
+      <div class="page-title">Månadsvis</div>
+      <div class="page-sub">Välj en månad för att se ställningen</div>
+    </div>
+    <div class="monthly-tabs" id="monthly-tabs"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Spelare</th><th>Antal onsdagar</th><th>Poäng</th><th>Snittpoäng</th></tr></thead>
+        <tbody id="tb-monthly"></tbody>
+      </table>
+    </div>
+  </section>
+ 
+  <!-- SESSIONS -->
+  <section class="section" id="sec-sessions">
+    <div class="sessions-header">
+      <div class="page-header" style="margin-bottom:0">
+        <div class="page-title">Onsdagar</div>
+        <div class="page-sub">Alla individuella resultat</div>
+      </div>
+      <button class="add-btn" onclick="openAddModal()">+ Lägg till</button>
+    </div>
+    <div style="height:24px"></div>
+    <div class="session-grid" id="session-grid"></div>
+  </section>
+ 
+  <!-- PLAYERS -->
+  <section class="section" id="sec-players">
+    <div class="page-header">
+      <div class="page-title">Spelare</div>
+      <div class="page-sub">Klicka på en spelare för att se profilen</div>
+    </div>
+    <div class="players-grid" id="players-grid"></div>
+  </section>
+ 
+  <!-- PROFILE -->
+  <section class="section" id="sec-profile">
+    <button class="back-btn" onclick="goBack()">← Tillbaka</button>
+    <div class="profile-layout">
+      <div class="profile-sidebar">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profile-avatar" onclick="triggerPhotoUpload()">
+            <div class="profile-avatar-overlay">Byt foto</div>
+          </div>
+          <div class="profile-fullname" id="profile-fullname"></div>
+          <div class="profile-nick" id="profile-nick"></div>
+        </div>
+        <div class="profile-info-list" id="profile-info-list"></div>
+        <button class="edit-profile-btn" onclick="openEditModal()">Redigera profil</button>
+      </div>
+      <div class="profile-main">
+        <div class="stat-cards" id="profile-stat-cards"></div>
+        <div>
+          <div class="profile-section-title">Historik</div>
+          <div class="player-history" id="player-history"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+</main>
+ 
+<!-- ADD SESSION MODAL -->
+<div class="modal-bg" id="modal-add" onclick="if(event.target===this)closeAddModal()">
+  <div class="modal">
+    <div class="modal-title">Lägg till onsdag</div>
+    <div class="form-row">
+      <label class="form-label">Datum</label>
+      <input type="date" id="inp-date">
+    </div>
+    <div class="section-label">Slutresultat – dra för att rangordna (1:a överst)</div>
+    <div class="drag-hint">Avmarkera frånvarande · Fyll i V–F (vinster–förluster)</div>
+    <div class="drag-list" id="drag-list"></div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeAddModal()">Avbryt</button>
+      <button class="btn-save" onclick="saveSession()">Spara</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- EDIT PROFILE MODAL -->
+<div class="modal-bg" id="modal-edit" onclick="if(event.target===this)closeEditModal()">
+  <div class="modal">
+    <div class="modal-title" id="edit-modal-title">Redigera profil</div>
+    <div class="edit-grid">
+      <div class="form-row">
+        <label class="form-label">Förnamn</label>
+        <input type="text" id="ep-firstname" placeholder="Förnamn">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Efternamn</label>
+        <input type="text" id="ep-lastname" placeholder="Efternamn">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Smeknamn</label>
+        <input type="text" id="ep-nick" placeholder='t.ex. "The Arrow"'>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Födelsedag</label>
+        <input type="date" id="ep-bday">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Längd (cm)</label>
+        <input type="number" id="ep-height" placeholder="180" min="100" max="250">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Föredragen hand</label>
+        <select id="ep-hand">
+          <option value="">– Välj –</option>
+          <option value="Höger">Höger</option>
+          <option value="Vänster">Vänster</option>
+          <option value="Bägge">Bägge</option>
+        </select>
+      </div>
+      <div class="form-row full">
+        <label class="form-label">Profilbild</label>
+        <div class="photo-upload-area" onclick="document.getElementById('photo-file-input').click()">
+          <img id="photo-preview" class="photo-preview" style="display:none">
+          <div id="photo-upload-label" class="photo-upload-label">Klicka för att ladda upp foto</div>
+        </div>
+        <input type="file" id="photo-file-input" accept="image/*" onchange="handlePhotoUpload(event)">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeEditModal()">Avbryt</button>
+      <button class="btn-save" onclick="saveProfile()">Spara</button>
+    </div>
+  </div>
+</div>
+ 
+<script>
+const PLAYERS=['Anton','Axel','James','Nilo','Sigge','Torsten','Vilgot'];
+const MONTHS_SV=['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+const MONTHS_FULL=['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
+ 
+let sessions=[], profiles={}, dragSrcEl=null, currentPlayer=null, prevSection='marathon', pendingPhoto=null;
+ 
+function defaultProfile(name){return{firstname:name,lastname:'',nick:'',bday:'',height:'',hand:'',photo:''}}
+ 
+function load(){
+  try{const d=localStorage.getItem('op_v3');if(d){const o=JSON.parse(d);sessions=o.sessions||[];profiles=o.profiles||{}}}catch(e){}
+  PLAYERS.forEach(p=>{if(!profiles[p])profiles[p]=defaultProfile(p)});
+}
+function save(){try{localStorage.setItem('op_v3',JSON.stringify({sessions,profiles}))}catch(e){}}
+ 
+function monthKey(s){const d=new Date(s+'T12:00:00');return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function monthLabel(k,full){const[y,m]=k.split('-');return full?`${MONTHS_FULL[parseInt(m)-1]} ${y}`:`${MONTHS_SV[parseInt(m)-1]} ${y}`}
+function formatDate(s){const d=new Date(s+'T12:00:00');return`${d.getDate()} ${MONTHS_SV[d.getMonth()]} ${d.getFullYear()}`}
+function formatBday(s){if(!s)return'—';const d=new Date(s+'T12:00:00');return`${d.getDate()} ${MONTHS_FULL[d.getMonth()]} ${d.getFullYear()}`}
+ 
+function initials(p){const pr=profiles[p]||{};const f=(pr.firstname||p);const l=pr.lastname||'';return l?f[0].toUpperCase()+l[0].toUpperCase():f[0].toUpperCase()}
+function displayName(p){const pr=profiles[p]||{};return pr.lastname?`${pr.firstname||p} ${pr.lastname}`:pr.firstname||p}
+ 
+function avatarSm(p){const pr=profiles[p]||{};if(pr.photo)return`<div class="pl-avatar-sm"><img src="${pr.photo}" alt="${p}"></div>`;return`<div class="pl-avatar-sm">${initials(p)}</div>`}
+ 
+function computeStandings(list){
+  const pts={},played={};
+  PLAYERS.forEach(p=>{pts[p]=0;played[p]=0});
+  list.forEach(s=>s.results.forEach(r=>{if(!r.absent){pts[r.player]+=r.points;played[r.player]++}}));
+  return PLAYERS.map(p=>({player:p,points:pts[p],played:played[p],avg:played[p]>0?(pts[p]/played[p]).toFixed(1):'—'})).sort((a,b)=>b.points-a.points||b.played-a.played);
+}
+function rankClass(i){return i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}
+ 
+function playerLink(p){
+  return`<button class="player-link" onclick="openProfile('${p}')">${avatarSm(p)}<span class="pl-name">${displayName(p)}</span></button>`;
+}
+ 
+// MARATHON
+function renderMarathon(){
+  const st=computeStandings(sessions);
+  document.getElementById('marathon-sub').textContent=sessions.length>0?`${sessions.length} onsdagar spelade · Startade 18 april 2025`:'Inga resultat inlagda ännu · Startade 18 april 2025';
+  document.getElementById('podium').innerHTML=sessions.length===0?'':st.slice(0,3).map((s,i)=>{
+    const pr=profiles[s.player]||{};
+    const av=pr.photo?`<div class="podium-avatar"><img src="${pr.photo}"></div>`:`<div class="podium-avatar">${initials(s.player)}</div>`;
+    return`<div class="podium-card p${i+1}" onclick="openProfile('${s.player}')">
+      <div class="podium-pos">${i+1}</div>${av}
+      <div class="podium-name">${displayName(s.player)}</div>
+      <div class="podium-pts">${s.points}</div>
+      <div class="podium-label">poäng · ${s.played} onsdagar</div>
+    </div>`;
+  }).join('');
+  document.getElementById('tb-marathon').innerHTML=st.map((s,i)=>`
+    <tr>
+      <td class="rank-num ${rankClass(i)}">${i+1}</td>
+      <td>${playerLink(s.player)}</td>
+      <td class="stat">${s.played}</td>
+      <td class="pts">${s.points}</td>
+      <td class="stat">${s.avg}</td>
+    </tr>`).join('');
+}
+ 
+// MONTHLY
+function renderMonthlyTabs(){
+  const keys=[...new Set(sessions.map(s=>monthKey(s.date)))].sort().reverse();
+  const tabs=document.getElementById('monthly-tabs');
+  if(keys.length===0){tabs.innerHTML='<span style="color:var(--muted);font-size:13px">Inga resultat ännu</span>';document.getElementById('tb-monthly').innerHTML='<tr><td colspan="5" class="empty">Inga resultat inlagda ännu</td></tr>';return}
+  tabs.innerHTML=keys.map((k,i)=>`<button class="mtab${i===0?' active':''}" onclick="selectMonth('${k}',this)">${monthLabel(k,false)}</button>`).join('');
+  selectMonthKey(keys[0]);
+}
+function selectMonth(k,btn){document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectMonthKey(k)}
+function selectMonthKey(k){
+  const st=computeStandings(sessions.filter(s=>monthKey(s.date)===k));
+  document.getElementById('tb-monthly').innerHTML=st.map((s,i)=>`
+    <tr>
+      <td class="rank-num ${rankClass(i)}">${i+1}</td>
+      <td>${playerLink(s.player)}</td>
+      <td class="stat">${s.played}</td>
+      <td class="pts">${s.points}</td>
+      <td class="stat">${s.avg}</td>
+    </tr>`).join('');
+}
+ 
+// SESSIONS
+function renderSessions(){
+  const grid=document.getElementById('session-grid');
+  if(sessions.length===0){grid.innerHTML='<div class="empty" style="grid-column:1/-1">Inga onsdagar inlagda ännu.<br>Tryck på <strong>+ Lägg till</strong> för att börja!</div>';return}
+  grid.innerHTML=[...sessions].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(s=>{
+    const ri=sessions.indexOf(s);
+    const present=s.results.filter(r=>!r.absent).sort((a,b)=>b.points-a.points);
+    const absent=s.results.filter(r=>r.absent);
+    const rows=present.map((r,i)=>{
+      const rec=r.record?`<span class="sc-record">${r.record.w}–${r.record.l}</span>`:'';
+      return`<div class="sc-row"><span class="sc-pos${i===0?' first':''}">${i+1}</span><span style="flex:1">${displayName(r.player)}</span>${rec}<span class="sc-pts-sm">${r.points}p</span></div>`;
+    }).join('');
+    const absentNote=absent.length>0?`<div class="absent-note">Frånvarande: ${absent.map(r=>displayName(r.player)).join(', ')}</div>`:'';
+    return`<div class="session-card" id="scard-${ri}">
+      <div class="sc-head" onclick="toggleCard(${ri})">
+        <div><div class="sc-date">${formatDate(s.date)}</div><div class="sc-n">${present.length} spelare deltog</div></div>
+        <div style="text-align:right"><div class="sc-winner">🎯 ${displayName(present[0]?.player||'?')}</div>
+        <button class="delete-btn" onclick="deleteSession(event,${ri})" title="Ta bort">✕</button></div>
+      </div>
+      <div class="sc-body">${rows}${absentNote}</div>
+    </div>`;
+  }).join('');
+}
+function toggleCard(i){document.getElementById(`scard-${i}`).classList.toggle('open')}
+function deleteSession(e,i){e.stopPropagation();if(!confirm('Ta bort detta resultat?'))return;sessions.splice(i,1);save();renderAll()}
+ 
+// PLAYERS PAGE
+function renderPlayers(){
+  const st=computeStandings(sessions);
+  const rankMap={};st.forEach((s,i)=>rankMap[s.player]=i+1);
+  document.getElementById('players-grid').innerHTML=PLAYERS.map(p=>{
+    const pr=profiles[p]||{};
+    const av=pr.photo?`<div class="pc-avatar"><img src="${pr.photo}"></div>`:`<div class="pc-avatar">${initials(p)}</div>`;
+    return`<div class="player-card" onclick="openProfile('${p}')">
+      ${av}
+      <div class="pc-name">${displayName(p)}</div>
+      <div class="pc-nick">${pr.nick?`"${pr.nick}"`:''}</div>
+      <div class="pc-rank">#${rankMap[p]||'—'}</div>
+      <div class="pc-rank-label">i maratontabellen</div>
+    </div>`;
+  }).join('');
+}
+ 
+// PROFILE
+function openProfile(player){
+  currentPlayer=player;
+  const active=document.querySelector('.section.active');
+  prevSection=active?.id?.replace('sec-','')||'marathon';
+  if(prevSection==='profile')prevSection='players';
+  renderProfile(player);
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-profile').classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  window.scrollTo(0,0);
+}
+ 
+function goBack(){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(`sec-${prevSection}`).classList.add('active');
+  const idx=['marathon','monthly','sessions','players'].indexOf(prevSection);
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>{b.classList.toggle('active',i===idx)});
+  if(prevSection==='monthly')renderMonthlyTabs();
+  if(prevSection==='players')renderPlayers();
+}
+ 
+function renderProfile(player){
+  const pr=profiles[player]||defaultProfile(player);
+  const st_all=computeStandings(sessions);
+  const marathonRank=st_all.findIndex(s=>s.player===player)+1;
+ 
+  const nowKey=monthKey(new Date().toISOString().split('T')[0]);
+  const st_month=computeStandings(sessions.filter(s=>monthKey(s.date)===nowKey));
+  const monthRank=st_month.findIndex(s=>s.player===player)+1;
+ 
+  const wWon=sessions.filter(s=>{const p=s.results.filter(r=>!r.absent).sort((a,b)=>b.points-a.points);return p[0]?.player===player}).length;
+  const allMonthKeys=[...new Set(sessions.map(s=>monthKey(s.date)))];
+  const mWins=allMonthKeys.filter(k=>{const st=computeStandings(sessions.filter(s=>monthKey(s.date)===k));return st[0]?.player===player&&st[0]?.points>0}).length;
+ 
+  // Avatar
+  const avEl=document.getElementById('profile-avatar');
+  avEl.innerHTML=pr.photo?`<img src="${pr.photo}" alt="${player}"><div class="profile-avatar-overlay">Byt foto</div>`:`${initials(player)}<div class="profile-avatar-overlay">Byt foto</div>`;
+ 
+  document.getElementById('profile-fullname').textContent=displayName(player);
+  document.getElementById('profile-nick').textContent=pr.nick?`"${pr.nick}"`:' ';
+ 
+  document.getElementById('profile-info-list').innerHTML=[
+    ['Smeknamn',pr.nick||'—'],
+    ['Födelsedag',formatBday(pr.bday)],
+    ['Längd',pr.height?pr.height+' cm':'—'],
+    ['Föredragen hand',pr.hand||'—'],
+  ].map(([l,v])=>`<div class="profile-info-row"><span class="pir-label">${l}</span><span class="pir-val">${v}</span></div>`).join('');
+ 
+  document.getElementById('profile-stat-cards').innerHTML=[
+    [marathonRank?`#${marathonRank}`:'—','Plats i maratontabell'],
+    [monthRank?`#${monthRank}`:'—','Plats denna månad'],
+    [wWon,'Onsdagar vunna'],
+    [mWins,'Månatliga segrar'],
+  ].map(([n,l])=>`<div class="stat-card"><div class="stat-card-num">${n}</div><div class="stat-card-label">${l}</div></div>`).join('');
+ 
+  const pSessions=sessions.map((s,i)=>({s,i})).filter(({s})=>s.results.some(r=>r.player===player&&!r.absent)).sort((a,b)=>new Date(b.s.date)-new Date(a.s.date));
+  document.getElementById('player-history').innerHTML=pSessions.length===0?'<div class="empty">Inga matcher spelade ännu</div>':pSessions.map(({s})=>{
+    const present=s.results.filter(r=>!r.absent).sort((a,b)=>b.points-a.points);
+    const pos=present.findIndex(r=>r.player===player)+1;
+    const res=s.results.find(r=>r.player===player);
+    const rec=res?.record?`${res.record.w}–${res.record.l}`:'';
+    return`<div class="ph-row"><span class="ph-date">${formatDate(s.date)}</span><span class="ph-pos${pos===1?' p1':''}">${pos}:a</span><span style="flex:1"></span><span class="ph-rec">${rec}</span><span class="ph-pts">${res?.points||0}p</span></div>`;
+  }).join('');
+}
+ 
+// EDIT PROFILE
+function openEditModal(){
+  const pr=profiles[currentPlayer]||defaultProfile(currentPlayer);
+  document.getElementById('edit-modal-title').textContent=`Redigera – ${currentPlayer}`;
+  document.getElementById('ep-firstname').value=pr.firstname||currentPlayer;
+  document.getElementById('ep-lastname').value=pr.lastname||'';
+  document.getElementById('ep-nick').value=pr.nick||'';
+  document.getElementById('ep-bday').value=pr.bday||'';
+  document.getElementById('ep-height').value=pr.height||'';
+  document.getElementById('ep-hand').value=pr.hand||'';
+  pendingPhoto=null;
+  const prev=document.getElementById('photo-preview');
+  const lbl=document.getElementById('photo-upload-label');
+  if(pr.photo){prev.src=pr.photo;prev.style.display='block';lbl.textContent='Klicka för att byta foto'}
+  else{prev.style.display='none';lbl.textContent='Klicka för att ladda upp foto'}
+  document.getElementById('modal-edit').classList.add('open');
+}
+function closeEditModal(){document.getElementById('modal-edit').classList.remove('open')}
+ 
+function handlePhotoUpload(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    pendingPhoto=ev.target.result;
+    const prev=document.getElementById('photo-preview');
+    prev.src=pendingPhoto;prev.style.display='block';
+    document.getElementById('photo-upload-label').textContent='Klicka för att byta foto';
+  };
+  reader.readAsDataURL(file);
+}
+function triggerPhotoUpload(){openEditModal();setTimeout(()=>document.getElementById('photo-file-input').click(),300)}
+ 
+function saveProfile(){
+  if(!currentPlayer)return;
+  const pr=profiles[currentPlayer]||defaultProfile(currentPlayer);
+  pr.firstname=document.getElementById('ep-firstname').value.trim()||currentPlayer;
+  pr.lastname=document.getElementById('ep-lastname').value.trim();
+  pr.nick=document.getElementById('ep-nick').value.trim();
+  pr.bday=document.getElementById('ep-bday').value;
+  pr.height=document.getElementById('ep-height').value;
+  pr.hand=document.getElementById('ep-hand').value;
+  if(pendingPhoto)pr.photo=pendingPhoto;
+  profiles[currentPlayer]=pr;
+  save();closeEditModal();renderProfile(currentPlayer);renderAll();
+}
+ 
+// ADD SESSION
+function openAddModal(){document.getElementById('inp-date').value=new Date().toISOString().split('T')[0];buildDragList();document.getElementById('modal-add').classList.add('open')}
+function closeAddModal(){document.getElementById('modal-add').classList.remove('open')}
+ 
+function buildDragList(){
+  const list=document.getElementById('drag-list');
+  list.innerHTML=PLAYERS.map(p=>`
+    <div class="drag-item" draggable="true" data-player="${p}">
+      <input type="checkbox" checked onchange="toggleAbsent(this)">
+      <span class="drag-name">${displayName(p)}</span>
+      <div class="record-inputs">
+        <input type="number" min="0" max="20" placeholder="V" data-rec="w">
+        <span class="record-sep">–</span>
+        <input type="number" min="0" max="20" placeholder="F" data-rec="l">
+      </div>
+      <span class="drag-handle">⠿</span>
+    </div>`).join('');
+  list.querySelectorAll('.drag-item').forEach(el=>{
+    initDrag(el);
+    el.querySelectorAll('input').forEach(inp=>{inp.addEventListener('mousedown',e=>e.stopPropagation());inp.addEventListener('dragstart',e=>e.stopPropagation())});
+  });
+}
+function toggleAbsent(cb){cb.closest('.drag-item').classList.toggle('absent',!cb.checked)}
+ 
+function initDrag(el){
+  el.addEventListener('dragstart',e=>{dragSrcEl=el;el.classList.add('dragging');e.dataTransfer.effectAllowed='move'});
+  el.addEventListener('dragend',()=>{dragSrcEl=null;document.querySelectorAll('.drag-item').forEach(i=>i.classList.remove('dragging','drag-over'))});
+  el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over')});
+  el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
+  el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag-over');if(dragSrcEl&&dragSrcEl!==el){const l=el.parentNode;const ci=[...l.children];if(ci.indexOf(dragSrcEl)<ci.indexOf(el))l.insertBefore(dragSrcEl,el.nextSibling);else l.insertBefore(dragSrcEl,el)}});
+}
+ 
+function saveSession(){
+  const date=document.getElementById('inp-date').value;
+  if(!date){alert('Välj ett datum');return}
+  const items=[...document.querySelectorAll('#drag-list .drag-item')];
+  const present=items.filter(i=>!i.classList.contains('absent'));
+  if(present.length===0){alert('Minst en spelare måste ha spelat');return}
+  const n=present.length;
+  const results=items.map(item=>{
+    const absent=item.classList.contains('absent');
+    const pRank=present.indexOf(item);
+    const points=absent?0:(n-pRank);
+    const w=parseInt(item.querySelector('[data-rec="w"]')?.value);
+    const l=parseInt(item.querySelector('[data-rec="l"]')?.value);
+    const record=(!absent&&!isNaN(w)&&!isNaN(l))?{w,l}:null;
+    return{player:item.dataset.player,points,absent,record};
+  });
+  sessions.push({date,results});
+  sessions.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  save();closeAddModal();renderAll();
+}
+ 
+// NAV
+function showSection(name,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(`sec-${name}`).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(name==='monthly')renderMonthlyTabs();
+  if(name==='players')renderPlayers();
+}
+ 
+function renderAll(){
+  renderMarathon();renderSessions();
+  const active=document.querySelector('.section.active')?.id;
+  if(active==='sec-players')renderPlayers();
+  if(active==='sec-profile'&&currentPlayer)renderProfile(currentPlayer);
+}
+ 
+load();renderAll();
+</script>
+</body>
+</html>
